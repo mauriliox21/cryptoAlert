@@ -20,9 +20,9 @@ import com.maurlox21.cryptoalert.repostory.projection.CryptocurrencyProjection;
 import com.maurlox21.cryptoalert.service.CryptocurrencyService;
 import com.maurlox21.cryptoalert.web.dto.CryptocurrencyCreateDto;
 import com.maurlox21.cryptoalert.web.dto.CryptocurrencyResponseDto;
-import com.maurlox21.cryptoalert.web.dto.PageableDto;
+import com.maurlox21.cryptoalert.web.dto.PageDto;
 import com.maurlox21.cryptoalert.web.dto.mapper.CryptocurrencyMapper;
-import com.maurlox21.cryptoalert.web.dto.mapper.PageableMapper;
+import com.maurlox21.cryptoalert.web.dto.mapper.PageMapper;
 
 import jakarta.validation.Valid;
 
@@ -43,11 +43,11 @@ public class CryptocurrencyController {
     }
     
     @GetMapping
-    public ResponseEntity<PageableDto> getAll(@PageableDefault Pageable pageable){
+    public ResponseEntity<PageDto> getAll(@PageableDefault Pageable pageable){
 
         Page<CryptocurrencyProjection> criptocurrencies = this.service.getAll(pageable);
 
-        return ResponseEntity.ok(PageableMapper.toDto(criptocurrencies));
+        return ResponseEntity.ok(PageMapper.toDto(criptocurrencies));
     }
 
     @GetMapping("/{id}")

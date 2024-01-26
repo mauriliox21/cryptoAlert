@@ -20,10 +20,10 @@ import com.maurlox21.cryptoalert.entity.User;
 import com.maurlox21.cryptoalert.jwt.JwtUserDetails;
 import com.maurlox21.cryptoalert.repostory.projection.UserProjection;
 import com.maurlox21.cryptoalert.service.UserService;
-import com.maurlox21.cryptoalert.web.dto.PageableDto;
+import com.maurlox21.cryptoalert.web.dto.PageDto;
 import com.maurlox21.cryptoalert.web.dto.UserCreateDto;
 import com.maurlox21.cryptoalert.web.dto.UserResponseDto;
-import com.maurlox21.cryptoalert.web.dto.mapper.PageableMapper;
+import com.maurlox21.cryptoalert.web.dto.mapper.PageMapper;
 import com.maurlox21.cryptoalert.web.dto.mapper.UserMapper;
 
 import jakarta.validation.Valid;
@@ -46,11 +46,11 @@ public class UserController {
     
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PageableDto> getUsers(@PageableDefault Pageable pageable) {
+    public ResponseEntity<PageDto> getUsers(@PageableDefault Pageable pageable) {
         
         Page<UserProjection> users = this.service.findAllUsers(pageable);
 
-        return ResponseEntity.ok(PageableMapper.toDto(users));
+        return ResponseEntity.ok(PageMapper.toDto(users));
     }
 
     @GetMapping("/{id}")

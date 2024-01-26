@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class PageableDto {
+public class PageDto {
     
     private List content =  new ArrayList<>();
     
