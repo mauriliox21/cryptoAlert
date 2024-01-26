@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.maurlox21.cryptoalert.entity.Cryptocurrency;
 import com.maurlox21.cryptoalert.repostory.CryptocurrencyRepository;
+import com.maurlox21.cryptoalert.repostory.projection.CryptocurrencyProjection;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -25,9 +26,9 @@ public class CryptocurrencyService {
         return criated;
     }
 
-    public Page<Cryptocurrency> getAll(Pageable pageable){
+    public Page<CryptocurrencyProjection> getAll(Pageable pageable){
 
-        return this.repository.findAll(pageable);
+        return this.repository.findAllPageable(pageable);
     }
 
     public Cryptocurrency getById(Long id) {
@@ -38,5 +39,18 @@ public class CryptocurrencyService {
             return optCryptocurrency.get();
         
         throw new EntityNotFoundException("Cryptocurrency not found");
+    }
+
+    public void update(Long id, Cryptocurrency cryptocurrency) {
+        
+        Optional<Cryptocurrency> optCryptocurrency = this.repository.findById(id);
+
+        if(optCryptocurrency.isEmpty())
+            throw new EntityNotFoundException("Cryptocurrency not found");
+           
+        cryptocurrency.setId(id);
+
+        this.repository.save(cryptocurrency);
+        
     }
 }

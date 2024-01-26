@@ -1,6 +1,9 @@
 package com.maurlox21.cryptoalert.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.maurlox21.cryptoalert.entity.User;
 import com.maurlox21.cryptoalert.jwt.JwtUserDetails;
+import com.maurlox21.cryptoalert.repostory.projection.UserProjection;
 import com.maurlox21.cryptoalert.service.UserService;
+import com.maurlox21.cryptoalert.web.dto.PageableDto;
 import com.maurlox21.cryptoalert.web.dto.UserCreateDto;
 import com.maurlox21.cryptoalert.web.dto.UserResponseDto;
+import com.maurlox21.cryptoalert.web.dto.mapper.PageableMapper;
 import com.maurlox21.cryptoalert.web.dto.mapper.UserMapper;
 
 import jakarta.validation.Valid;
@@ -40,9 +46,11 @@ public class UserController {
     
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> getUsers() {
+    public ResponseEntity<PageableDto> getUsers(@PageableDefault Pageable pageable) {
         
-        return ResponseEntity.ok("API rodando");
+        Page<UserProjection> users = this.service.findAllUsers(pageable);
+
+        return ResponseEntity.ok(PageableMapper.toDto(users));
     }
 
     @GetMapping("/{id}")
@@ -56,7 +64,7 @@ public class UserController {
 
     @GetMapping("/details")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getDetails(@AuthenticationPrincipal JwtUserDetails userDetails){
+    public ResponseEntity<UserResponseDto> getDetails(@AuthenticationPrincipal JwtUserDetails userDetails){
 
         User user = this.service.getUserByUserId(userDetails.getId());
         

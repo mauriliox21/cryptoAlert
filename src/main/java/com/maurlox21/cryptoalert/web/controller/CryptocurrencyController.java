@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.maurlox21.cryptoalert.entity.Cryptocurrency;
+import com.maurlox21.cryptoalert.repostory.projection.CryptocurrencyProjection;
 import com.maurlox21.cryptoalert.service.CryptocurrencyService;
 import com.maurlox21.cryptoalert.web.dto.CryptocurrencyCreateDto;
 import com.maurlox21.cryptoalert.web.dto.CryptocurrencyResponseDto;
+import com.maurlox21.cryptoalert.web.dto.PageableDto;
 import com.maurlox21.cryptoalert.web.dto.mapper.CryptocurrencyMapper;
 import com.maurlox21.cryptoalert.web.dto.mapper.PageableMapper;
 
@@ -40,9 +43,9 @@ public class CryptocurrencyController {
     }
     
     @GetMapping
-    public ResponseEntity<?> getAll(@PageableDefault Pageable pageable){
+    public ResponseEntity<PageableDto> getAll(@PageableDefault Pageable pageable){
 
-        Page<Cryptocurrency> criptocurrencies = this.service.getAll(pageable);
+        Page<CryptocurrencyProjection> criptocurrencies = this.service.getAll(pageable);
 
         return ResponseEntity.ok(PageableMapper.toDto(criptocurrencies));
     }
@@ -51,6 +54,14 @@ public class CryptocurrencyController {
     public ResponseEntity<CryptocurrencyResponseDto> getById(@PathVariable Long id){
         Cryptocurrency cryptocurrency = this.service.getById(id);
         return ResponseEntity.ok(CryptocurrencyMapper.toDto(cryptocurrency));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid CryptocurrencyCreateDto cryptocurrencydto){
+
+        this.service.update(id, CryptocurrencyMapper.toEntity(cryptocurrencydto));
+
+        return ResponseEntity.noContent().build();
     }
 }
 
