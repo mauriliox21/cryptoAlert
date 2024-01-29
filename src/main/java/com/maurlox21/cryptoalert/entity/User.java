@@ -1,10 +1,13 @@
 package com.maurlox21.cryptoalert.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +37,9 @@ public class User {
 
     @Column(name = "tx_role")
     private String txRole = Role.ROLE_USER.name();
+
+    @OneToMany(mappedBy = "user")
+    private List<Alert> alerts;
 
     public enum Role {
         ROLE_ADMIN, ROLE_USER

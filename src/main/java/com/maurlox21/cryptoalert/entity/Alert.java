@@ -1,13 +1,12 @@
 package com.maurlox21.cryptoalert.entity;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,24 +16,22 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_cryptocurrency")
-public class Cryptocurrency {
+@Table(name = "tb_alert")
+public class Alert {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cryptocurrency")
+    @Column(name = "id_alert")
     private Long id;
 
-    @Column(name = "nm_cryptocurrency")
-    private String nmCryptocurrency;
+    @Column(name = "nr_target_value")
+    private Double nrTargetValue;
 
-    @Column(name = "tx_symbol")
-    private String txSymbol;
+    @ManyToOne()
+    @JoinColumn(name = "id_cryptocurrency")
+    private Cryptocurrency cryptocurrency;
 
-    @Column(name = "tx_path_icon")
-    private String txPathIcon;
-
-    @OneToMany(mappedBy = "cryptocurrency")
-    private List<Alert> alerts;
-
+    @ManyToOne()
+    @JoinColumn(name = "id_user")
+    private User user;
 }
