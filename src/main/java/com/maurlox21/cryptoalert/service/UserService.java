@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.maurlox21.cryptoalert.entity.User;
+import com.maurlox21.cryptoalert.exception.EntityNotFoundException;
 import com.maurlox21.cryptoalert.repostory.UserRepository;
 import com.maurlox21.cryptoalert.repostory.projection.UserProjection;
 
@@ -36,7 +37,7 @@ public class UserService {
         Optional<User> user = this.repository.findById(id);
         
         if(user.isEmpty())
-            throw new RuntimeException("Usuario não encontrado");
+            throw new EntityNotFoundException("User not found");
         
         return user.get();
     }

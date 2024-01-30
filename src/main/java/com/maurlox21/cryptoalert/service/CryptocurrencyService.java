@@ -8,10 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.maurlox21.cryptoalert.entity.Cryptocurrency;
+import com.maurlox21.cryptoalert.exception.EntityNotFoundException;
 import com.maurlox21.cryptoalert.repostory.CryptocurrencyRepository;
 import com.maurlox21.cryptoalert.repostory.projection.CryptocurrencyProjection;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CryptocurrencyService {
