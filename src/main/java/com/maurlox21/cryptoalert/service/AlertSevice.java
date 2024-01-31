@@ -42,4 +42,14 @@ public class AlertSevice {
 
         return optAlert.get();
     }
+
+    public void alter(Long id, Alert alert) {
+        
+        Alert alertExistent = this.getAlertUserbyId(id, alert.getUser().getId());
+
+        alertExistent.setCryptocurrency(alert.getCryptocurrency());
+        alertExistent.setNrTargetValue(alert.getNrTargetValue());
+
+        this.repository.save(alertExistent);
+    }
 }

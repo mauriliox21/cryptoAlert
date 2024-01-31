@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,15 +40,11 @@ public class AlertController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AlertResponseDto> create(@RequestBody @Valid AlertCreateDto alertDto, @AuthenticationPrincipal JwtUserDetails userDetails){
         
-        Alert alert = AlertMapper.toEntity(alertDto);
+        Alert alert = AlertMapper.toEntity(alertDto, userDetails.getId());
 
-        User userOwner = new User();
-        userOwner.setId(userDetails.getId());
-        alert.setUser(userOwner);
-        
-        Alert alertCreated = this.alertSevice.create(alert);
+        AlertResponseDto alertCreated = AlertMapper.toDto(this.alertSevice.create(alert));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(AlertMapper.toDto(alertCreated));
+        return ResponseEntity.status(HttpStatus.CREATED).body(alertCreated);
     }
 
     @GetMapping
@@ -63,8 +60,18 @@ public class AlertController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AlertResponseDto> getAlertById(@PathVariable Long id, @AuthenticationPrincipal JwtUserDetails userDetails){
 
-        Alert alert = this.alertSevice.getAlertUserbyId(id, userDetails.getId());
+        AlertResponseDto alert = AlertMapper.toDto(this.alertSevice.getAlertUserbyId(id, userDetails.getId()));
 
-        return ResponseEntity.ok(AlertMapper.toDto(alert));
+        return ResponseEntity.ok(alert);
     }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> alter (@PathVariable Long id, @RequestBody @Valid AlertCreateDto alertDto, @AuthenticationPrincipal JwtUserDetails userDetails){
+
+        this.alertSevice.alter(id, AlertMapper.toEntity(alertDto, userDetails.getId()));
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
