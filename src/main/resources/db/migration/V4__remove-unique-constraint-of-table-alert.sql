@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS public.tb_alert DROP CONSTRAINT IF EXISTS tb_alert_id_cryptocurrency_key;

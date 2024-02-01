@@ -18,6 +18,7 @@ public class AlertMapper {
             @Override
             protected void configure() {
                 map().setUser(user);
+                map().setId(null);
             }
         };
 

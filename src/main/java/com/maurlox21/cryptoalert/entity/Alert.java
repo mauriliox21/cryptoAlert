@@ -1,7 +1,9 @@
 package com.maurlox21.cryptoalert.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,7 +29,7 @@ public class Alert {
     @Column(name = "nr_target_value")
     private Double nrTargetValue;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Cryptocurrency.class)
     @JoinColumn(name = "id_cryptocurrency")
     private Cryptocurrency cryptocurrency;
 
