@@ -35,6 +35,7 @@ public class AlertSevice {
         }
 
         alert.setCryptocurrency(cryptocurrency);
+        alert.setTpAlert(alert.getTpAlert().toUpperCase());
 
         this.repository.save(alert);
 
@@ -72,6 +73,7 @@ public class AlertSevice {
 
         alertExistent.setCryptocurrency(cryptocurrency);
         alertExistent.setNrTargetValue(alert.getNrTargetValue());
+        alertExistent.setTpAlert(alert.getTpAlert().toUpperCase());
 
         this.repository.save(alertExistent);
     }
@@ -82,5 +84,11 @@ public class AlertSevice {
         Alert alertExistent = this.getAlertUserbyId(id, idUser);
 
         this.repository.delete(alertExistent);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Alert> getAlertsByIdCryptocurrenncy(Long idCryptocurrency, Pageable pageable) {
+        
+        return this.repository.findAllByIdCryptocurrency(idCryptocurrency, pageable);
     }
 }

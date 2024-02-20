@@ -14,4 +14,6 @@ public class AlertResponseDto {
     private Double nrTargetValue;
 
     private CryptocurrencyResponseDto cryptocurrency;
+
+    private String tpAlert;
 }

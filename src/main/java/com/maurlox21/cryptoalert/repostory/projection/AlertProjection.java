@@ -6,6 +6,8 @@ public interface AlertProjection {
 
     Double getNrTargetValue();
 
+    String getTpAlert();
+
     CryptocurrencyProjection getCryptocurrency();
     
 }
