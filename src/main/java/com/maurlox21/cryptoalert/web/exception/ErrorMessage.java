@@ -20,7 +20,7 @@ public class ErrorMessage {
     private int status;
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Map<String, String> erros;
+    private Map<String, String> errors;
 
     public ErrorMessage(){
     }
@@ -41,10 +41,10 @@ public class ErrorMessage {
     }
 
     private void addErros(BindingResult result) {
-        this.erros = new HashMap<>();
+        this.errors = new HashMap<>();
 
         for(FieldError fieldError: result.getFieldErrors()){
-            this.erros.put(fieldError.getField(), fieldError.getDefaultMessage());
+            this.errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
     }
 }
