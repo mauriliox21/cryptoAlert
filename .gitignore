@@ -34,3 +34,6 @@ build/
 
 ### Application.properties de desenvolvimento ###
 src/main/resources/application-dev.properties
+
+### Notification credentials ###
+src/main/resources/firebase-service-account.json
