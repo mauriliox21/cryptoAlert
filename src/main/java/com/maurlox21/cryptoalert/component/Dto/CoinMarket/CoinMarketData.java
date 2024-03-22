@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CoinMarketData {
     
-    @JsonAlias("BTC")
+    @JsonAlias({"BTC", "ETH"})
     private ArrayList<CoinMarketCryptocurrency> criptocurrency; 
 }
