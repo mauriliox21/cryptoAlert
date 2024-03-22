@@ -41,6 +41,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Alert> alerts;
 
+    @OneToMany(mappedBy = "user")
+    private List<Device> devices;
+
     public enum Role {
         ROLE_ADMIN, ROLE_USER
     }
