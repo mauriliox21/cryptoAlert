@@ -1,5 +1,6 @@
 package com.maurlox21.cryptoalert.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class CryptocurrencyService {
     public Page<CryptocurrencyProjection> getAll(Pageable pageable){
 
         return this.repository.findAllPageable(pageable);
+    }
+
+    public List<Cryptocurrency> findAll(){
+        return this.repository.findAll();
     }
 
     public Cryptocurrency getById(Long id) {
