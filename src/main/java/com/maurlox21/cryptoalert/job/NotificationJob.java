@@ -11,26 +11,37 @@ import org.springframework.stereotype.Component;
 
 import com.maurlox21.cryptoalert.component.RestCoinmarket;
 import com.maurlox21.cryptoalert.component.Dto.CoinMarket.CoinMarketResponse;
+import com.maurlox21.cryptoalert.component.firebasemessaging.FirebaseMessagingService;
+import com.maurlox21.cryptoalert.component.firebasemessaging.NotificationMessage;
 import com.maurlox21.cryptoalert.entity.Alert;
 import com.maurlox21.cryptoalert.entity.Cryptocurrency;
+import com.maurlox21.cryptoalert.repostory.projection.DeviceProjection;
 import com.maurlox21.cryptoalert.service.AlertSevice;
 import com.maurlox21.cryptoalert.service.CryptocurrencyService;
+import com.maurlox21.cryptoalert.service.DeviceService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class NotificationJob {
     
-    private CryptocurrencyService cryptocurrencyService;
     private AlertSevice alertSevice;
+    private CryptocurrencyService cryptocurrencyService;
+    private DeviceService deviceService;
+    private FirebaseMessagingService messagingService;
     private RestCoinmarket restCoinmarket;
 
     @Autowired
-    public NotificationJob (CryptocurrencyService cryptocurrencyService, AlertSevice alertSevice, RestCoinmarket restCoinmarket){
+    public NotificationJob (CryptocurrencyService cryptocurrencyService, AlertSevice alertSevice, RestCoinmarket restCoinmarket, FirebaseMessagingService messagingService, DeviceService deviceService){
         this.cryptocurrencyService = cryptocurrencyService;
         this.alertSevice = alertSevice;
         this.restCoinmarket = restCoinmarket;
+        this.messagingService = messagingService;
+        this.deviceService = deviceService;
     }
 
-    //@Scheduled(fixedDelay = (1000 * 60 * 60))
+    @Scheduled(fixedDelay = (1000 * 60 * 60))
     public void notificate() {
         List<Cryptocurrency> cryptocurrencies = this.cryptocurrencyService.findAll();
 
@@ -51,13 +62,46 @@ public class NotificationJob {
         for (Alert alert : alerts) {
             
             if(alert.getTpAlert().toUpperCase().equals(Alert.TypeAlert.TO_UP.name().toUpperCase()) && currentPrice >= alert.getNrTargetValue()){
-                System.out.println("Alert by Id:'" + alert.getId() + "' is done");
+                log.info("Alert by Id:'" + alert.getId() + "' is done");
+                sendNotification(alert);
             }
 
             else if(alert.getTpAlert().toUpperCase().equals(Alert.TypeAlert.TO_DOWN.name().toUpperCase()) && currentPrice <= alert.getNrTargetValue()){
-                System.out.println("Alert by Id:'" + alert.getId() + "' is done");
+                log.info("Alert by Id:'" + alert.getId() + "' is done");
+                sendNotification(alert);
             }
             
         }
+    }
+
+    private void sendNotification(Alert alert){
+        Long idUser = alert.getUser().getId();
+
+        List<DeviceProjection> devices = this.deviceService.getDevicesByIdUser(idUser);
+
+        String title = alert.getCryptocurrency().getNmCryptocurrency() + 
+            (alert.getTpAlert().equalsIgnoreCase(Alert.TypeAlert.TO_DOWN.name()) ? " caiu" : " subiu") +
+            " para o valor que você esperava!";
+
+        String body = "Seu alerta para a criptomoeda " + alert.getCryptocurrency().getNmCryptocurrency() +
+                    " no valor de R$ " + alert.getNrTargetValue() + 
+                    " foi atingido. Está na hora de agir.";
+        
+
+        for(DeviceProjection device : devices){
+            try{
+                this.messagingService.SendNotificationByToken(NotificationMessage
+                    .builder()
+                    .title(title)
+                    .body(body)
+                    .recipientToken(device.getTxNotificationToken())
+                    .build()
+                );
+            }
+            catch(Exception ex){
+                log.info("Error sending notification to device id: " + device.getId() + " ------------------------------");
+            }
+        }
+        
     }
 }
