@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CoinMarketQuote {
     
-    @JsonAlias("USD")
+    @JsonAlias("BRL")
     private CoinMarketCoin coin;    
 }

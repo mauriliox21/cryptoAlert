@@ -31,7 +31,7 @@ public class RestCoinmarket {
 
         HttpEntity<String> request = new HttpEntity<>(headers);
 
-        String url = API_URL_ORIGIN + "/v2/cryptocurrency/quotes/latest?symbol=" + symbol;
+        String url = API_URL_ORIGIN + "/v2/cryptocurrency/quotes/latest?symbol=" + symbol + "&convert=BRL";
         ResponseEntity<CoinMarketResponse> response = restTemplate.exchange(url, HttpMethod.GET, request, new ParameterizedTypeReference<CoinMarketResponse>() {});
 
         return response.getBody();
