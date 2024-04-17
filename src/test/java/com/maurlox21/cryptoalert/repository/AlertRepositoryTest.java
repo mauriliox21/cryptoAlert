@@ -15,7 +15,6 @@ import java.util.Optional;
 import com.maurlox21.cryptoalert.entity.Alert;
 import com.maurlox21.cryptoalert.repostory.AlertRepository;
 import com.maurlox21.cryptoalert.repostory.projection.AlertProjection;
-import com.maurlox21.cryptoalert.repostory.projection.CryptocurrencyProjection;
 
 @DataJpaTest
 @ActiveProfiles("test")
