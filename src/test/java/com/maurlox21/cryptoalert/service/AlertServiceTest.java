@@ -63,6 +63,7 @@ public class AlertServiceTest {
         verify(this.cryptocurrencyService, times(1)).getById(any());
         verify(this.alertRepository, times(1)).save(any());
         assertThat(newAlert.getCryptocurrency()).isEqualTo(cryptocurrency);
+        assertThat(newAlert.getIsActive()).isTrue();
     }
 
     @Test
@@ -133,8 +134,8 @@ public class AlertServiceTest {
         User user = new User(userId, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null);
         Cryptocurrency cryptocurrency = Mockito.spy(new Cryptocurrency(1L, "Bitcoin", "BTC", "bitcoin.png", null));
 
-        Alert dataForUpdate = new Alert(null, 100.5, "TO_UP", new Cryptocurrency(1L, null, null, null, null), user);
-        Alert existentAlert = new Alert(alertId, 50.0, "TO_DOWN", cryptocurrency, user); 
+        Alert dataForUpdate = new Alert(null, 100.5, "TO_UP", true, new Cryptocurrency(1L, null, null, null, null), user);
+        Alert existentAlert = new Alert(alertId, 50.0, "TO_DOWN", false, cryptocurrency, user); 
         Optional<Alert> opt = Optional.of(existentAlert);
         
         when(this.alertRepository.findByIdAndIdUser(alertId, userId)).thenReturn(opt);
@@ -152,6 +153,7 @@ public class AlertServiceTest {
         assertThat(existentAlert.getTpAlert()).isEqualTo(dataForUpdate.getTpAlert());
         assertThat(existentAlert.getNrTargetValue()).isEqualTo(dataForUpdate.getNrTargetValue());
         assertThat(existentAlert.getCryptocurrency()).isEqualTo(cryptocurrency);
+        assertThat(existentAlert.getIsActive()).isEqualTo(dataForUpdate.getIsActive());
 
     }
 

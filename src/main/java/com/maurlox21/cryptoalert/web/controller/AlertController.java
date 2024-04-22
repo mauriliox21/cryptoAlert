@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.maurlox21.cryptoalert.entity.Alert;
-import com.maurlox21.cryptoalert.entity.User;
 import com.maurlox21.cryptoalert.jwt.JwtUserDetails;
 import com.maurlox21.cryptoalert.repostory.projection.AlertProjection;
 import com.maurlox21.cryptoalert.service.AlertSevice;
 import com.maurlox21.cryptoalert.web.dto.AlertCreateDto;
 import com.maurlox21.cryptoalert.web.dto.AlertResponseDto;
+import com.maurlox21.cryptoalert.web.dto.AlertUpdateDto;
 import com.maurlox21.cryptoalert.web.dto.PageDto;
 import com.maurlox21.cryptoalert.web.dto.mapper.AlertMapper;
 import com.maurlox21.cryptoalert.web.dto.mapper.PageMapper;
@@ -68,7 +68,7 @@ public class AlertController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> alter (@PathVariable Long id, @RequestBody @Valid AlertCreateDto alertDto, @AuthenticationPrincipal JwtUserDetails userDetails){
+    public ResponseEntity<?> alter (@PathVariable Long id, @RequestBody @Valid AlertUpdateDto alertDto, @AuthenticationPrincipal JwtUserDetails userDetails){
 
         this.alertSevice.alter(id, AlertMapper.toEntity(alertDto, userDetails.getId()));
 
@@ -76,6 +76,7 @@ public class AlertController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> delete (@PathVariable Long id, @AuthenticationPrincipal JwtUserDetails userDetails){
 
         this.alertSevice.delete(id, userDetails.getId());

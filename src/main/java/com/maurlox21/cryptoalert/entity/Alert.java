@@ -31,6 +31,9 @@ public class Alert {
 
     @Column(name = "tp_alert")
     private String tpAlert = TypeAlert.TO_UP.name();
+    
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = Cryptocurrency.class)
     @JoinColumn(name = "id_cryptocurrency")
@@ -42,5 +45,13 @@ public class Alert {
 
     public enum TypeAlert {
         TO_UP, TO_DOWN
+    }
+
+    public Alert (Long id, Double nrTargetValue, String tpAlert, Cryptocurrency cryptocurrency, User user){
+        this.id = id;
+        this.nrTargetValue = nrTargetValue;
+        this.tpAlert = tpAlert;
+        this.cryptocurrency = cryptocurrency;
+        this.user = user;
     }
 }

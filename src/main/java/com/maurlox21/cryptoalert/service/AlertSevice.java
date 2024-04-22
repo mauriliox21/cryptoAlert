@@ -36,6 +36,7 @@ public class AlertSevice {
 
         alert.setCryptocurrency(cryptocurrency);
         alert.setTpAlert(alert.getTpAlert().toUpperCase());
+        alert.setIsActive(true);
 
         this.repository.save(alert);
 
@@ -74,6 +75,7 @@ public class AlertSevice {
         alertExistent.setCryptocurrency(cryptocurrency);
         alertExistent.setNrTargetValue(alert.getNrTargetValue());
         alertExistent.setTpAlert(alert.getTpAlert().toUpperCase());
+        alertExistent.setIsActive(alert.getIsActive());
 
         this.repository.save(alertExistent);
     }

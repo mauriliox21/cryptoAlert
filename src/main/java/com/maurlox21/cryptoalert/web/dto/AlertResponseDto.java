@@ -16,4 +16,6 @@ public class AlertResponseDto {
     private CryptocurrencyResponseDto cryptocurrency;
 
     private String tpAlert;
+
+    private Boolean isActive;
 }

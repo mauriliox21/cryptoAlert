@@ -8,6 +8,8 @@ public interface AlertProjection {
 
     String getTpAlert();
 
+    Boolean getIsActive();
+
     CryptocurrencyProjection getCryptocurrency();
     
 }
