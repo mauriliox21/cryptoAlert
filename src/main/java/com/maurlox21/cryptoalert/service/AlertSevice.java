@@ -75,6 +75,10 @@ public class AlertSevice {
         alertExistent.setCryptocurrency(cryptocurrency);
         alertExistent.setNrTargetValue(alert.getNrTargetValue());
         alertExistent.setTpAlert(alert.getTpAlert().toUpperCase());
+
+        if(!alertExistent.getIsActive() && alert.getIsActive())
+            alertExistent.setNrSending(0);
+
         alertExistent.setIsActive(alert.getIsActive());
 
         this.repository.save(alertExistent);
@@ -89,8 +93,19 @@ public class AlertSevice {
     }
 
     @Transactional(readOnly = true)
-    public Page<Alert> getAlertsByIdCryptocurrenncy(Long idCryptocurrency, Pageable pageable) {
+    public Page<Alert> getActiveAlertsByIdCryptocurrenncy(Long idCryptocurrency, Pageable pageable) {
         
-        return this.repository.findAllByIdCryptocurrency(idCryptocurrency, pageable);
+        return this.repository.getActiveAlertsByIdCryptocurrency(idCryptocurrency, pageable);
+    }
+
+    @Transactional
+    public void updateStateOfSending(Alert alert){
+
+        //after sending 5 times deactivates the alert
+        alert.setNrSending(alert.getNrSending() + 1);
+        if(alert.getNrSending() >= 5)
+            alert.setIsActive(false);
+
+        this.repository.save(alert);
     }
 }

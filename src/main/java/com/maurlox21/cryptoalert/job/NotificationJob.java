@@ -49,11 +49,11 @@ public class NotificationJob {
 
             CoinMarketResponse response = this.restCoinmarket.getLatestQuoteOfCryptocurrency(cryptocurrency.getTxSymbol());
 
-            Page<Alert> alerts = this.alertSevice.getAlertsByIdCryptocurrenncy(cryptocurrency.getId(), PageRequest.of(0, 1000));
+            Page<Alert> pageAlerts = this.alertSevice.getActiveAlertsByIdCryptocurrenncy(cryptocurrency.getId(), PageRequest.of(0, 1000));
 
             Double price = response.getData().getCriptocurrency().get(0).getQuote().getCoin().getPrice();
 
-            this.processAlerts(price, alerts.getContent());
+            this.processAlerts(price, pageAlerts.getContent());
         }
     }
 
@@ -97,6 +97,8 @@ public class NotificationJob {
                     .recipientToken(device.getTxNotificationToken())
                     .build()
                 );
+
+                this.alertSevice.updateStateOfSending(alert);
             }
             catch(Exception ex){
                 log.info("Error sending notification to device id: " + device.getId() + " ------------------------------");

@@ -35,6 +35,9 @@ public class Alert {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "nr_sending")
+    private Integer nrSending = 0;
+
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = Cryptocurrency.class)
     @JoinColumn(name = "id_cryptocurrency")
     private Cryptocurrency cryptocurrency;
@@ -51,6 +54,15 @@ public class Alert {
         this.id = id;
         this.nrTargetValue = nrTargetValue;
         this.tpAlert = tpAlert;
+        this.cryptocurrency = cryptocurrency;
+        this.user = user;
+    }
+
+    public Alert (Long id, Double nrTargetValue, String tpAlert, Boolean isActive, Cryptocurrency cryptocurrency, User user){
+        this.id = id;
+        this.nrTargetValue = nrTargetValue;
+        this.tpAlert = tpAlert;
+        this.isActive = isActive;
         this.cryptocurrency = cryptocurrency;
         this.user = user;
     }
