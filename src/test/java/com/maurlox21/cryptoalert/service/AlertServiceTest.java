@@ -30,6 +30,10 @@ import com.maurlox21.cryptoalert.repostory.AlertRepository;
 import com.maurlox21.cryptoalert.repostory.projection.AlertProjection;
 
 public class AlertServiceTest {
+
+    private static String TO_UP = Alert.TypeAlert.TO_UP.name();
+    private static String TO_DOWN = Alert.TypeAlert.TO_DOWN.name();
+
     @Mock
     private AlertRepository alertRepository;
     
@@ -51,7 +55,7 @@ public class AlertServiceTest {
         //Arrange
         Cryptocurrency cryptocurrency = new Cryptocurrency(1L, "Bitcoin", "BTC", "bitcoin.png", null);
         User user = new User(1L, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null);
-        Alert alert = new Alert(1L, 100.5, "TO_UP", new Cryptocurrency(1L, "", "", "", null), user);
+        Alert alert = new Alert(1L, 100.5, TO_UP, new Cryptocurrency(1L, "", "", "", null), user);
 
         when(this.cryptocurrencyService.getById(1L)).thenReturn(cryptocurrency);
         when(this.alertRepository.save(alert)).thenReturn(alert);
@@ -71,7 +75,7 @@ public class AlertServiceTest {
     void createCase2() {
         //Arrange
         User user = new User(1L, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null);
-        Alert alert = new Alert(1L, 100.5, "TO_UP", new Cryptocurrency(1L, "", "", "", null), user);
+        Alert alert = new Alert(1L, 100.5, TO_UP, new Cryptocurrency(1L, "", "", "", null), user);
 
         when(this.cryptocurrencyService.getById(1L)).thenThrow(new RuntimeException("Cryptocurrency not found"));
         when(this.alertRepository.save(alert)).thenReturn(alert);
@@ -92,7 +96,7 @@ public class AlertServiceTest {
         //Arrange
         Long userId = 1L;
         Long alertId = 1L;
-        Optional<Alert> opt = Optional.of(new Alert(alertId, 100.5, "TO_UP", null, new User(userId, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null)));
+        Optional<Alert> opt = Optional.of(new Alert(alertId, 100.5, TO_UP, null, new User(userId, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null)));
         
         when(this.alertRepository.findByIdAndIdUser(alertId, userId)).thenReturn(opt);
 
@@ -134,8 +138,8 @@ public class AlertServiceTest {
         User user = new User(userId, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null);
         Cryptocurrency cryptocurrency = Mockito.spy(new Cryptocurrency(1L, "Bitcoin", "BTC", "bitcoin.png", null));
 
-        Alert dataForUpdate = new Alert(null, 100.5, "TO_UP", true, new Cryptocurrency(1L, null, null, null, null), user);
-        Alert existentAlert = new Alert(alertId, 50.0, "TO_DOWN", false, cryptocurrency, user); 
+        Alert dataForUpdate = new Alert(null, 100.5, TO_UP, true, new Cryptocurrency(1L, null, null, null, null), user);
+        Alert existentAlert = new Alert(alertId, 50.0, TO_DOWN, false, cryptocurrency, user); 
         Optional<Alert> opt = Optional.of(existentAlert);
         
         when(this.alertRepository.findByIdAndIdUser(alertId, userId)).thenReturn(opt);
@@ -166,8 +170,8 @@ public class AlertServiceTest {
         User user = new User(userId, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null);
         Cryptocurrency cryptocurrency = Mockito.spy(new Cryptocurrency(1L, "Bitcoin", "BTC", "bitcoin.png", null));
 
-        Alert dataForUpdate = new Alert(null, 100.5, "TO_UP", new Cryptocurrency(1L, null, null, null, null), user);
-        Alert existentAlert = new Alert(alertId, 50.0, "TO_DOWN", cryptocurrency, user); 
+        Alert dataForUpdate = new Alert(null, 100.5, TO_UP, new Cryptocurrency(1L, null, null, null, null), user);
+        Alert existentAlert = new Alert(alertId, 50.0, TO_DOWN, cryptocurrency, user); 
         Optional<Alert> opt = Optional.empty();
         
         when(this.alertRepository.findByIdAndIdUser(alertId, userId)).thenReturn(opt);
@@ -193,8 +197,8 @@ public class AlertServiceTest {
         User user = new User(userId, "João", "123456", "joao@gmail.com", "ROLE_USER", null, null);
         Cryptocurrency cryptocurrency = Mockito.spy(new Cryptocurrency(999L, "Bitcoin", "BTC", "bitcoin.png", null));
 
-        Alert dataForUpdate = new Alert(null, 100.5, "TO_UP", new Cryptocurrency(1L, null, null, null, null), user);
-        Alert existentAlert = new Alert(alertId, 50.0, "TO_DOWN", cryptocurrency, user); 
+        Alert dataForUpdate = new Alert(null, 100.5, TO_UP, new Cryptocurrency(1L, null, null, null, null), user);
+        Alert existentAlert = new Alert(alertId, 50.0, TO_DOWN, cryptocurrency, user); 
         Optional<Alert> opt = Optional.of(existentAlert);
         
         when(this.alertRepository.findByIdAndIdUser(alertId, userId)).thenReturn(opt);
@@ -217,7 +221,7 @@ public class AlertServiceTest {
         //Arrange
         Long userId = 1L;
         Long alertId = 1L;
-        Alert alert = new Alert(alertId, 100.5, "TO_UP", new Cryptocurrency(999L, "Bitcoin", "BTC", "bitcoin.png", null), null);
+        Alert alert = new Alert(alertId, 100.5, TO_UP, new Cryptocurrency(999L, "Bitcoin", "BTC", "bitcoin.png", null), null);
         Optional<Alert> opt = Optional.of(alert);
 
         when(this.alertRepository.findByIdAndIdUser(alertId, userId)).thenReturn(opt);
@@ -225,6 +229,7 @@ public class AlertServiceTest {
         //Act
         this.alertSevice.delete(alertId, userId);
 
+        //Assert
         verify(this.alertRepository, times(1)).findByIdAndIdUser(any(), any());
         verify(this.alertRepository, times(1)).delete(any());
     }
@@ -244,8 +249,43 @@ public class AlertServiceTest {
             this.alertSevice.delete(alertId, userId);
         });
     
+        //Assert
         verify(this.alertRepository, times(1)).findByIdAndIdUser(any(), any());
         Assertions.assertEquals("Not found alert by id " + alertId, ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should be able to update number of sending when sending less than 5 times")
+    void updateStateOfSendingCase1(){
+        //Arrange
+        Alert alert = new Alert(1L, 300.0, TO_UP, true, 2, null, null );
+
+        when(this.alertRepository.save(any())).thenReturn(alert);
+
+        //Act
+        this.alertSevice.updateStateOfSending(alert);
+
+        //Assert
+        verify(this.alertRepository, times(1)).save(any());
+        assertThat(alert.getNrSending()).isEqualTo(3);
+        assertThat(alert.getIsActive()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should be able to update number of sending and attr isActive when sending more than 5 times")
+    void updateStateOfSendingCase2(){
+        //Arrange
+        Alert alert = new Alert(1L, 300.0, TO_UP, true, 4, null, null );
+
+        when(this.alertRepository.save(any())).thenReturn(alert);
+
+        //Act
+        this.alertSevice.updateStateOfSending(alert);
+
+        //Assert
+        verify(this.alertRepository, times(1)).save(any());
+        assertThat(alert.getNrSending()).isEqualTo(5);
+        assertThat(alert.getIsActive()).isFalse();
     }
 
 }

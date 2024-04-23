@@ -95,7 +95,7 @@ public class AlertRepositoryTest {
     @DisplayName("Should be able get alerts by cryptocurrency id")
     void findAllByIdCryptocurrencyCase1(){
         //Act
-        Page<Alert> result = this.alertRepository.findAllByIdCryptocurrency(101L, PageRequest.of(0, 10));
+        Page<Alert> result = this.alertRepository.getActiveAlertsByIdCryptocurrency(101L, PageRequest.of(0, 10));
 
         //Assert
         assertThat(result.isEmpty()).isFalse();
@@ -105,7 +105,7 @@ public class AlertRepositoryTest {
     @DisplayName("should be able to returns empty list if cryptocurrency id not exists in DB")
     void findAllByIdCryptocurrencyCase2(){
         //Act
-        Page<Alert> result = this.alertRepository.findAllByIdCryptocurrency(999L, PageRequest.of(0, 10));
+        Page<Alert> result = this.alertRepository.getActiveAlertsByIdCryptocurrency(999L, PageRequest.of(0, 10));
 
         //Assert
         assertThat(result.isEmpty()).isTrue();
