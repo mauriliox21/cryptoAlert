@@ -93,9 +93,9 @@ public class AlertSevice {
     }
 
     @Transactional(readOnly = true)
-    public Page<Alert> getActiveAlertsByIdCryptocurrenncy(Long idCryptocurrency, Pageable pageable) {
+    public Page<Alert> getActiveAlertsByIdCryptocurrency(Long idCryptocurrency, Double currentPrice, Pageable pageable) {
         
-        return this.repository.getActiveAlertsByIdCryptocurrency(idCryptocurrency, pageable);
+        return this.repository.getActiveAlertsByIdCryptocurrency(idCryptocurrency, currentPrice, pageable);
     }
 
     @Transactional

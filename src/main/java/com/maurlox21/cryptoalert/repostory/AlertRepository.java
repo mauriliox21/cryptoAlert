@@ -20,7 +20,7 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
     @Query(value = "select a from Alert a join a.user u where a.id = :idAlert and u.id = :idUser")
     public Optional<Alert> findByIdAndIdUser(Long idAlert, Long idUser);
 
-    @Query(value = "select a from Alert a join a.cryptocurrency c where c.id = :idCryptocurrency and a.isActive = true")
-    public Page<Alert> getActiveAlertsByIdCryptocurrency(Long idCryptocurrency, Pageable pageable);
+    @Query(value = "select a from Alert a join a.cryptocurrency c where c.id = :idCryptocurrency and a.isActive = true and (a.tpAlert = 'TO_UP' and :currentPrice >= a.nrTargetValue or a.tpAlert = 'TO_DOWN' and :currentPrice <= a.nrTargetValue) ")
+    public Page<Alert> getActiveAlertsByIdCryptocurrency(Long idCryptocurrency, Double currentPrice, Pageable pageable);
 
 }

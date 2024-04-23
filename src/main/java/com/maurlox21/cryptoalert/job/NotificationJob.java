@@ -48,29 +48,20 @@ public class NotificationJob {
         for (Cryptocurrency cryptocurrency : cryptocurrencies) {
 
             CoinMarketResponse response = this.restCoinmarket.getLatestQuoteOfCryptocurrency(cryptocurrency.getTxSymbol());
-
-            Page<Alert> pageAlerts = this.alertSevice.getActiveAlertsByIdCryptocurrenncy(cryptocurrency.getId(), PageRequest.of(0, 1000));
-
+            
             Double price = response.getData().getCriptocurrency().get(0).getQuote().getCoin().getPrice();
 
-            this.processAlerts(price, pageAlerts.getContent());
+            Page<Alert> pageAlerts = this.alertSevice.getActiveAlertsByIdCryptocurrency(cryptocurrency.getId(), price, PageRequest.of(0, 1000));
+
+            this.processAlerts(pageAlerts.getContent());
         }
     }
 
-    private void processAlerts(Double currentPrice, List<Alert> alerts){
+    private void processAlerts(List<Alert> alerts){
 
         for (Alert alert : alerts) {
-            
-            if(alert.getTpAlert().toUpperCase().equals(Alert.TypeAlert.TO_UP.name().toUpperCase()) && currentPrice >= alert.getNrTargetValue()){
-                log.info("Alert by Id:'" + alert.getId() + "' is done");
-                sendNotification(alert);
-            }
-
-            else if(alert.getTpAlert().toUpperCase().equals(Alert.TypeAlert.TO_DOWN.name().toUpperCase()) && currentPrice <= alert.getNrTargetValue()){
-                log.info("Alert by Id:'" + alert.getId() + "' is done");
-                sendNotification(alert);
-            }
-            
+            log.info("Alert by Id:'" + alert.getId() + "' is done");
+            sendNotification(alert);
         }
     }
 
