@@ -92,10 +92,20 @@ public class AlertRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should be able get alerts by cryptocurrency id")
-    void findAllByIdCryptocurrencyCase1(){
+    @DisplayName("Should be able get alerts by cryptocurrency id and active to up")
+    void getActiveAlertsByIdCryptocurrencyCase1(){
         //Act
         Page<Alert> result = this.alertRepository.getActiveAlertsByIdCryptocurrency(101L, 51670.1, PageRequest.of(0, 10));
+
+        //Assert
+        assertThat(result.isEmpty()).isFalse();
+    }
+    
+    @Test
+    @DisplayName("Should be able get alerts by cryptocurrency id and active to down")
+    void getActiveAlertsByIdCryptocurrencyCase2(){
+        //Act
+        Page<Alert> result = this.alertRepository.getActiveAlertsByIdCryptocurrency(101L, 300.5, PageRequest.of(0, 10));
 
         //Assert
         assertThat(result.isEmpty()).isFalse();
@@ -103,7 +113,7 @@ public class AlertRepositoryTest {
 
     @Test
     @DisplayName("should be able to returns empty list if cryptocurrency id not exists in DB")
-    void findAllByIdCryptocurrencyCase2(){
+    void getActiveAlertsByIdCryptocurrencyCase3(){
         //Act
         Page<Alert> result = this.alertRepository.getActiveAlertsByIdCryptocurrency(999L, 51670.1, PageRequest.of(0, 10));
 
