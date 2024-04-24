@@ -80,19 +80,22 @@ public class NotificationJob {
         
 
         for(DeviceProjection device : devices){
-            try{
-                this.messagingService.SendNotificationByToken(NotificationMessage
-                    .builder()
-                    .title(title)
-                    .body(body)
-                    .recipientToken(device.getTxNotificationToken())
-                    .build()
-                );
-
-                this.alertSevice.updateStateOfSending(alert);
-            }
-            catch(Exception ex){
-                log.info("Error sending notification to device id: " + device.getId() + " ------------------------------");
+            if(device.getTxNotificationToken() != null && !device.getTxNotificationToken().isBlank())
+            {
+                try{
+                    this.messagingService.SendNotificationByToken(NotificationMessage
+                        .builder()
+                        .title(title)
+                        .body(body)
+                        .recipientToken(device.getTxNotificationToken())
+                        .build()
+                    );
+    
+                    this.alertSevice.updateStateOfSending(alert);
+                }
+                catch(Exception ex){
+                    log.info("Error sending notification to device id: " + device.getId() + " ------------------------------");
+                }
             }
         }
         
