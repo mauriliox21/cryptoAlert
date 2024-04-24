@@ -27,7 +27,7 @@ import com.maurlox21.cryptoalert.web.dto.mapper.PageMapper;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/cryptocurrency")
+@RequestMapping("/api/v1/cryptocurrencies")
 public class CryptocurrencyController {
 
     @Autowired
