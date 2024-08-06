@@ -1,3 +1,6 @@
+FROM maven:3-openjdk-17-slim as mvn 
+RUN mvn package
+
 FROM openjdk:17-jdk-alpine
 RUN mkdir /app
 WORKDIR /app
