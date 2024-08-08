@@ -2,6 +2,7 @@ package com.maurlox21.cryptoalert.config;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -13,11 +14,14 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 @Configuration
 public class FirebaseConfig {
+
+    @Value("environment.firebase.file.path")
+    public String FILE_PATH;
     
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException{
 
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new ClassPathResource("/firebase-service-account.json").getInputStream());
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new ClassPathResource(FILE_PATH + "firebase-service-account.json").getInputStream());
 
         FirebaseOptions firebaseOptions = FirebaseOptions.builder().setCredentials(googleCredentials).build();
 
