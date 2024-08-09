@@ -9,4 +9,4 @@ RUN cp ./target/cryptoalert-0.0.1-SNAPSHOT.jar ../app.jar
 WORKDIR /
 RUN rm -r fonts
 EXPOSE 8080
-CMD ["cp", "./etc/secrets/firebase-service-account.json", "./fonts/src/main/resources/firebase-service-account.json", "java", "-jar", "/app.jar"]
+CMD ["cp", "./etc/secrets/firebase-service-account.json", "./fonts/src/main/resources/firebase-service-account.json"];[ "java", "-jar", "/app.jar"]
