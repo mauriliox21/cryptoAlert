@@ -15,7 +15,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("environment.firebase.file.path")
+    @Value("${environment.firebase.file.path}")
     public String FILE_PATH;
     
     @Bean
