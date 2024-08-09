@@ -3,5 +3,8 @@ RUN mkdir /fonts
 WORKDIR /fonts
 COPY . .
 RUN mvn package -DskipTests
+RUN cp ./target/cryptoalert-0.0.1-SNAPSHOT.jar ../app.jar
+WORKDIR /
+RUN rm -r fonts
 EXPOSE 8080
-CMD ["java", "-jar", "/fonts/target/cryptoalert-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "/app.jar"]
